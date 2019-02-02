@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Makefile笔记</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="/2017/12/26/makefile-basic/">
+    <link rel="alternate" type="application/rss+xml" title="Ja.Code" href="/feed.xml ">
+
+
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Ja.Code</a>
+        <small>猿修地，时光机</small>
+        <div>致力于成为一位活用前端技术的嵌入式全栈工程师</div>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Makefile笔记</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-12-26
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>Jacob Pan
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#linux" title="Category: linux" rel="category">linux</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#makefile" title="Tag: makefile" rel="tag">makefile</a-->
+        <a href="/tag/#makefile" title="Tag: makefile" rel="tag">makefile</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#section">基本</a></li>
+  <li><a href="#targets-">targets: %:</a></li>
+  <li><a href="#section-1">自动变量</a></li>
+  <li><a href="#section-2">参数</a></li>
+  <li><a href="#ifeq-ifdef">ifeq, ifdef</a></li>
+  <li><a href="#section-3">常用函数</a>    <ul>
+      <li><a href="#subst">subst</a></li>
+      <li><a href="#addsuffix-addprefix">addsuffix, addprefix</a></li>
+    </ul>
+  </li>
+  <li><a href="#makefile">引用其他makefile</a></li>
+  <li><a href="#section-4">警告和错误信息</a></li>
+</ul>
+
+<p>Makefile主要用来make的输入，命令<code>make filename</code>的意思就是要把filename生成。</p>
+
+<h2 id="section">基本</h2>
+
+<p><code>makefile
+target: dependences
+	shell cmd
+</code>
+以上是Makefile的基本格式。</p>
+
+<h2 id="targets-">targets: %:</h2>
+
+<p>通过<code>%</code>可以对target进行模式拓展</p>
+
+<p>```makefile
+targets = aa bb</p>
+
+<p>targets: %: %.c
+	gcc -o $@ $^
+```</p>
+
+<p>这里会自动拓展成</p>
+
+<p>```makefile
+aa: aa.c
+	gcc -o aa aa.c</p>
+
+<p>bb: bb.c
+	gcc -o bb bb.c
+```</p>
+
+<h2 id="section-1">自动变量</h2>
+
+<p>如上面的例子，<code>$@</code>代表target，<code>$^</code>代表全部的依赖文件，还有以下自动变量:</p>
+
+<ul>
+  <li><code>$&lt;</code> 依赖文件中的第一个文件</li>
+</ul>
+
+<h2 id="section-2">参数</h2>
+
+<p>通过make可以传递参数，在Makefile里可以获取到</p>
+
+<p><code>makefile
+aa: aa.c
+	gcc $(CFLAG) -o $@ $^
+</code>
+通过<code>make CFLAG=-g</code>，就可以把参数传入到makefile中，变成<code>gcc -g -o aa aa.c</code></p>
+
+<h2 id="ifeq-ifdef">ifeq, ifdef</h2>
+
+<p>```makefile
+ifdef VAR
+target = aa
+else
+target = bb
+endif</p>
+
+<p>ifeq ($(VAR), 1)
+CFLAG = -g
+endif</p>
+
+<p>target:
+	gcc $(CFLAG) -o $@ $^
+```
+上述例子描述了<code>ifdef</code>和<code>ifeq</code>的用法，请注意<code>ifdef</code>后面跟的变量名加<code>$()</code>，此外，还有<code>ifndef</code>和<code>ifneq</code>。</p>
+
+<p>这里的makefile可以通过<code>make VAR=1</code>传入参数，使makefile针对不同情况执行不同的命令。</p>
+
+<h2 id="section-3">常用函数</h2>
+
+<h3 id="subst">subst</h3>
+
+<p><code>
+$(subst &lt;from&gt;,&lt;to&gt;,&lt;text&gt;)
+</code></p>
+
+<h3 id="addsuffix-addprefix">addsuffix, addprefix</h3>
+
+<p><code>
+$(addsuffix &lt;suffix&gt;,&lt;names...&gt;)
+$(addprefix &lt;suffix&gt;,&lt;names...&gt;)
+</code></p>
+
+<p>更多makefile函数可见<a href="http://blog.csdn.net/yangxuan0261/article/details/52060582">makefile中常用函数</a></p>
+
+<h2 id="makefile">引用其他makefile</h2>
+
+<p>如果当前目录下有一个<code>makefile.in</code>，可以通过下面语句来引入</p>
+
+<p><code>
+include makefile.in
+</code></p>
+
+<h2 id="section-4">警告和错误信息</h2>
+
+<p><code>
+$(warning ...)      // 打印warning信息
+$(error ...)        // 打印error信息，并立马退出make
+</code></p>
+
+<blockquote>
+  <p>Jacob Pan <a href="http://jacobpan3g.github.io/cn">( jacobpan3g.github.io/cn )</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/12/26/install-ubuntu-by-hd-in-xp/">Windows xp下硬盘安装ubuntu</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/12/26/useful-cmd/">一些有用的命令</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+
+
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: ''?'':'issue-label',
+        owner: 'JacobPan3g',
+        repo: 'jacobpan3g.github.io',
+        oauth: {
+            client_id: '8a1e6ff22f37f6808c22',
+            client_secret: '377eee8fe03e02a91d8ff2a63d6420ba705470bb',
+        },
+    });
+    gitment.render('gitmentContainer')
+</script>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             时光沉淀于此！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/JacobPan3g" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jacob.pan@foxmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <!--
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        -->
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <!--
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+            -->
+            <span>
+                Blogs written by <a href="https://jacobpan3g.github.io/cn">Jacob Pan</a>.
+            </span>
+        </p>
+    </div>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?75177901590fba02b71851d2acaee595";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</footer>
+<!--
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+-->
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/smooth-scroll.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+  </body>
+
+</html>

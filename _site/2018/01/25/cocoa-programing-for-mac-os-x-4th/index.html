@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Cocoa Programing for Mac os X 4th笔记</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="/2018/01/25/cocoa-programing-for-mac-os-x-4th/">
+    <link rel="alternate" type="application/rss+xml" title="Ja.Code" href="/feed.xml ">
+
+
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Ja.Code</a>
+        <small>猿修地，时光机</small>
+        <div>致力于成为一位活用前端技术的嵌入式全栈工程师</div>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Cocoa Programing for Mac os X 4th笔记</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-01-25
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>Jacob Pan
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#book" title="Category: book" rel="category">book</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#mac" title="Tag: mac" rel="tag">mac</a-->
+        <a href="/tag/#mac" title="Tag: mac" rel="tag">mac</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#ch01-cocoa-what-is-it">ch01 Cocoa: what Is It?</a>    <ul>
+      <li><a href="#farmeworks">Farmeworks概述</a></li>
+      <li><a href="#section">睡眠和坚持是学好新知识的法宝</a></li>
+    </ul>
+  </li>
+  <li><a href="#ch02-lets-get-started">ch02 Let’s Get Started</a>    <ul>
+      <li><a href="#xcode">Xcode可创建项目的区别</a></li>
+      <li><a href="#xibnib">XIB与NIB的区别</a></li>
+      <li><a href="#dock">Dock下的不可见对象</a></li>
+      <li><a href="#outletsactions">outlets和actions</a></li>
+      <li><a href="#error-nstextfield">Error: 样例NSTextField未定义错误</a></li>
+      <li><a href="#outletsactions-1">outlets和actions的连线</a></li>
+      <li><a href="#oc">oc只支持单继承</a></li>
+      <li><a href="#oc-1">oc里的几个特殊类型</a></li>
+      <li><a href="#import"><code>#import</code>保证只包含一次</a></li>
+      <li><a href="#oc-2">oc里的关键字以@开始</a></li>
+      <li><a href="#hm">.h与.m文件之间的切换</a></li>
+      <li><a href="#ocpublicprotected">oc所有方法都是public，所有变量都是protected</a></li>
+      <li><a href="#option-"><option-单击>可以在类名或函数名调出帮助</option-单击></a></li>
+      <li><a href="#mac-app">Mac App的生命周期</a></li>
+      <li><a href="#window-serveruiapp">Window Server把UI事件分配给各个APP</a></li>
+    </ul>
+  </li>
+  <li><a href="#ch03-objective-c">ch03 Objective-C</a>    <ul>
+      <li><a href="#oc--c--">oc = c预编译器 + 库</a></li>
+      <li><a href="#octype">oc的变量都是指针，除了基本type</a></li>
+      <li><a href="#apptool">通常APP项目大写开头，命令行tool小写开头</a></li>
+      <li><a href="#oc-3">oc里很少出现对象复制</a></li>
+      <li><a href="#nslogformatcprintf">NSLog()的Format和C的printf差不多</a></li>
+      <li><a href="#mainmoc">不能直接在main.m里定义oc函数</a></li>
+      <li><a href="#nsstring">NSString可以保存多字节语言</a></li>
+      <li><a href="#msg0">往空对象发msg返回0</a></li>
+      <li><a href="#nsobjectdescription">NSObject的description在打印对象时被调用</a></li>
+      <li><a href="#nsobjectisequal">NSObject的isEqual:方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#ch05-uitargetaction">ch05 (UI)Target/Action</a>    <ul>
+      <li><a href="#uitargetaction">对于UI控件视角的Target和Action</a></li>
+      <li><a href="#nsbutton-nsslider-nstextfieldaction">NSButton, NSSlider, NSTextField控件的常用action</a></li>
+      <li><a href="#connection">直接用连线完成connection</a></li>
+      <li><a href="#property">property变量会自动生成<code>_名字</code>的私有变量</a></li>
+      <li><a href="#windwo">设定Windwo打开时第一个相应控件</a></li>
+      <li><a href="#action">用代码创建action</a></li>
+      <li><a href="#xcodedignostics">xcode调试程序的帮手Dignostics</a></li>
+      <li><a href="#document-based-app">document-based app可以多开</a></li>
+    </ul>
+  </li>
+  <li><a href="#ch06-helper-objects">ch06 Helper Objects</a>    <ul>
+      <li><a href="#delegates">Delegates就是一个接口？</a></li>
+      <li><a href="#nstableview">NSTableView例子书上缺少的步骤与收获</a></li>
+      <li><a href="#delegatenstableviewoutlet">Delegate就是NSTableView的outlet</a></li>
+    </ul>
+  </li>
+  <li><a href="#nsarraycontroller">08 NSArrayController</a>    <ul>
+      <li><a href="#nsdocument">NSDocument主要负责文件读写</a></li>
+      <li><a href="#cocoahfoundationh">引入Cocoa.h与Foundation.h的区别</a></li>
+      <li><a href="#nsarraycontrollercontent-array">绑定NSArrayController的Content Array</a></li>
+      <li><a href="#bindingsnstableview-cell">通过Bindings为NSTableView Cell绑定显示内容</a></li>
+      <li><a href="#tableview-cellnumber-formatter">为TableView Cell添加Number Formatter</a></li>
+      <li><a href="#setnilvalueforkey">重载setNilValueForKey:来处理输入空内容异常</a></li>
+    </ul>
+  </li>
+  <li><a href="#concurrency">34 Concurrency</a>    <ul>
+      <li><a href="#nstableviewdatasource">NSTableView的DataSource</a></li>
+      <li><a href="#bgthread-demo">BgThread Demo的补充</a></li>
+    </ul>
+  </li>
+  <li><a href="#nstask">36 NSTask</a>    <ul>
+      <li><a href="#base">开发文档base应用</a></li>
+      <li><a href="#tableviewcell">设置TableViewCell为不可编辑</a></li>
+      <li><a href="#nstableviewdatasource-1">NSTableView显示数据只需要DataSource</a></li>
+      <li><a href="#nstableview-1">NSTableView条目数正常内容不正常</a></li>
+      <li><a href="#togglebutton">Toggle类型Button</a></li>
+      <li><a href="#nib">基于NIB开发的框架图例说明</a></li>
+      <li><a href="#nspipensfilehandle">NSPipe和NSFileHandle</a></li>
+      <li><a href="#tasknstaskdidterminatenotification">Task的NSTaskDidTerminateNotification</a></li>
+      <li><a href="#task">Task的返回状态</a></li>
+      <li><a href="#nstextstorage">用NSTextStorage拼接字符串</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="ch01-cocoa-what-is-it">ch01 Cocoa: what Is It?</h2>
+
+<h3 id="farmeworks">Farmeworks概述</h3>
+
+<blockquote>
+  <p>Frameworks</p>
+</blockquote>
+
+<p>这里很好地简述了cocoa里3个重要库的基本作用</p>
+
+<ul>
+  <li>Foundation: oc相关的库</li>
+  <li>AppKit: UI控件库，即ApplicationKit</li>
+  <li>Core Data: 数据存储库，也叫persistence framework</li>
+</ul>
+
+<h3 id="section">睡眠和坚持是学好新知识的法宝</h3>
+
+<blockquote>
+  <p>How to Learn</p>
+</blockquote>
+
+<p>这一段作者的观点很有意思，说要学好新知识有两个技巧</p>
+
+<ul>
+  <li>每天睡够10小时</li>
+  <li>不要质疑自己的智力</li>
+</ul>
+
+<p>…</p>
+
+<h2 id="ch02-lets-get-started">ch02 Let’s Get Started</h2>
+
+<h3 id="xcode">Xcode可创建项目的区别</h3>
+
+<blockquote>
+  <p>In Xcocd - Create a New Project</p>
+</blockquote>
+
+<ol>
+  <li>Application: 带界面的app</li>
+  <li>Tool: 命令行工具或daemon进程</li>
+  <li>Bundle: 也叫plug-in，可以在runtime动态加载</li>
+  <li>framework: 库，只能在compile时加载</li>
+</ol>
+
+<h3 id="xibnib">XIB与NIB的区别</h3>
+
+<blockquote>
+  <p>In Interface Builder - Lay Out the Interface - For the More Curious: XIBs and NIBs</p>
+</blockquote>
+
+<ul>
+  <li>XIB是XML文件，用于生成NIB，XIB便于版本控制</li>
+  <li>NIB是给APP使用的界面资源文件；NIB的缩写是NeXT Interface Builder。</li>
+</ul>
+
+<h3 id="dock">Dock下的不可见对象</h3>
+
+<blockquote>
+  <p>In Interface Builder - The Dock</p>
+</blockquote>
+
+<p>这里提及了一下Dock下的几个不可见对象（Window，Menu之外的对象）:</p>
+
+<ul>
+  <li>File’s Owner: 在本xib是NSApplication对象，它把用户事件传递给window, ch12详细介绍</li>
+  <li>First Responder: 一个有用的虚构对象，在ch21详细介绍</li>
+</ul>
+
+<h3 id="outletsactions">outlets和actions</h3>
+
+<blockquote>
+  <p>In Interface Builder - Create a Class</p>
+</blockquote>
+
+<ul>
+  <li>outlets: 指向其他对象实例变量，需要控制该控件的需要</li>
+  <li>actions: 可以被UI触发的方法，用于消息输入</li>
+</ul>
+
+<h3 id="error-nstextfield">Error: 样例NSTextField未定义错误</h3>
+
+<blockquote>
+  <p>In Interface Builder - The Dock - Create a Class</p>
+</blockquote>
+
+<p>在写RandomController.h时，使用NSTextField声明变量会报错，因为NSTextField时AppKit的类，这里头文件只包含了<code>Foundation/Foundation.h</code>，因此会报错。解决方案有两个：</p>
+
+<ol>
+  <li>添加<code>#import &lt;AppKit/AppKit.h&gt;</code></li>
+  <li>把<code>#import &lt;Foundation/Foundation.h&gt;</code>直接换成<code>#import &lt;Cocoa/Cocoa.h&gt;</code>，像AppDelegate.h一样</li>
+</ol>
+
+<h3 id="outletsactions-1">outlets和actions的连线</h3>
+
+<blockquote>
+  <p>In Interface Builder - Make Connections</p>
+</blockquote>
+
+<p>首先，需要现在xib添加一个object，在右侧制定是RandomController类</p>
+
+<ul>
+  <li>outlets: 右击object，drag到Label</li>
+  <li>actions: 从Button开始crtl drag到object</li>
+</ul>
+
+<h3 id="oc">oc只支持单继承</h3>
+
+<blockquote>
+  <p>A Look at Objective-C</p>
+</blockquote>
+
+<p>与Java一样</p>
+
+<h3 id="oc-1">oc里的几个特殊类型</h3>
+
+<blockquote>
+  <p>A Look at Objective-C - Types and Constants in Objective-C</p>
+</blockquote>
+
+<ul>
+  <li>id: 可指向任何对象的指针</li>
+  <li>nil: 空对象</li>
+  <li>BOOL: char</li>
+  <li>YES: 1</li>
+  <li>NO: 0</li>
+  <li>IBOutlet: 一个空宏，让Interface Builder工具知道哪个是outlet</li>
+  <li>IBAction: 相当于void，也是给Interface Builder知道哪个是action</li>
+</ul>
+
+<h3 id="import"><code>#import</code>保证只包含一次</h3>
+
+<blockquote>
+  <p>A Look at Objective-C - Look at the Header File</p>
+</blockquote>
+
+<h3 id="oc-2">oc里的关键字以@开始</h3>
+
+<blockquote>
+  <p>A Look at Objective-C - Look at the Header File</p>
+</blockquote>
+
+<p>@interface, @end, @implementation, @class, @selector, @protocol, @property, @synthesize</p>
+
+<h3 id="hm">.h与.m文件之间的切换</h3>
+
+<blockquote>
+  <p>A Look at Objective-C - Edit the Implementation File</p>
+</blockquote>
+
+<p>有两种方法:
+- Top menu - Navigate - Jump to Next Counterpart 
+- 按Ctrl-Cmd-up</p>
+
+<h3 id="ocpublicprotected">oc所有方法都是public，所有变量都是protected</h3>
+
+<blockquote>
+  <p>A Look at Objective-C - Edit the Implementation File</p>
+</blockquote>
+
+<h3 id="option-"><option-单击>可以在类名或函数名调出帮助</option-单击></h3>
+
+<blockquote>
+  <p>Documentation</p>
+</blockquote>
+
+<h3 id="mac-app">Mac App的生命周期</h3>
+
+<blockquote>
+  <p>Chronology of an Application</p>
+</blockquote>
+
+<p><code>
+NSApplicationMain -&gt; create instance of NSApplication
+load NIB file -&gt; every object is called `awakeFormNib`
+Main event loop ...
+call `terminate()` if quit
+</code></p>
+
+<h3 id="window-serveruiapp">Window Server把UI事件分配给各个APP</h3>
+
+<blockquote>
+  <p>Chronology of an Application</p>
+</blockquote>
+
+<ul>
+  <li>输入：UI事件包含Mouse和Keyboard</li>
+  <li>输出：屏幕的显示</li>
+</ul>
+
+<h2 id="ch03-objective-c">ch03 Objective-C</h2>
+
+<h3 id="oc--c--">oc = c预编译器 + 库</h3>
+
+<p>苹果用的不是gcc，而是clang/LLVM(Low Level Virtual Machine)，也是一个开源编译器</p>
+
+<h3 id="octype">oc的变量都是指针，除了基本type</h3>
+
+<blockquote>
+  <p>Creating and Using Instances</p>
+</blockquote>
+
+<p>除了int, char, float等c基本变量</p>
+
+<h3 id="apptool">通常APP项目大写开头，命令行tool小写开头</h3>
+
+<blockquote>
+  <p>Using Existing Classes</p>
+</blockquote>
+
+<h3 id="oc-3">oc里很少出现对象复制</h3>
+
+<blockquote>
+  <p>Using Existing Classes</p>
+</blockquote>
+
+<p>如NSMutableArray的<code>addObject:</code>是直接把指针添加到数组中，而不会复制对象。</p>
+
+<h3 id="nslogformatcprintf">NSLog()的Format和C的printf差不多</h3>
+
+<blockquote>
+  <p>Using Existing Classes</p>
+</blockquote>
+
+<p>具体请见<code>Table 3.1 Possible Tokens in Objective-C Format Strings</code></p>
+
+<h3 id="mainmoc">不能直接在main.m里定义oc函数</h3>
+
+<blockquote>
+  <p>Using Existing Classes</p>
+</blockquote>
+
+<p>oc函数要定义在以下上下文里</p>
+
+<p>```
+@implementation</p>
+
+<p>… </p>
+
+<p>@end
+```
+经试验，也不能在main.h里定义其他C函数。</p>
+
+<h3 id="nsstring">NSString可以保存多字节语言</h3>
+
+<blockquote>
+  <p>Using Existing Classes</p>
+</blockquote>
+
+<p>C String只能保存ascii码，在处理多字节语言时很不方便，如中文，而NSString可以保存Unicode，不用担心本地化问题。</p>
+
+<h3 id="msg0">往空对象发msg返回0</h3>
+
+<blockquote>
+  <p>Sending Messages to nil</p>
+</blockquote>
+
+<p>官方能确定的，接受返回值的若是pointer，值为nil；若为int，值为0；其它类型不确定。</p>
+
+<h3 id="nsobjectdescription">NSObject的description在打印对象时被调用</h3>
+
+<blockquote>
+  <p>NSObject, NSArray, NSMutableArray,
+and NSString &gt; NSObject</p>
+</blockquote>
+
+<p>在<code>NSLog(@"%@", ...)</code>和gdb中的<code>po</code>命令都会自动调用description方法。</p>
+
+<h3 id="nsobjectisequal">NSObject的isEqual:方法</h3>
+
+<blockquote>
+  <p>NSObject, NSArray, NSMutableArray,
+and NSString &gt; NSObject</p>
+</blockquote>
+
+<p>对于对象，若没有重载isEqual:方法，以下两句相同，都是比较是否指向同一内存地址(即比较指针里的地址值)
+<code>
+a == b
+[a isEqual: b]
+</code>
+NSString的isEqual:已被重载，<code>[str1 isEqual: str2]</code>比较的是字符的内容，而不是<code>==</code>的比内存地址。</p>
+
+<h2 id="ch05-uitargetaction">ch05 (UI)Target/Action</h2>
+
+<h3 id="uitargetaction">对于UI控件视角的Target和Action</h3>
+
+<p>对于UI控件，一个Button，Target就是与其绑定了Action的Controller，Action就是用户触发动作后发给Controller的消息，即定义在Controller的IBAction方法</p>
+
+<p>发送Action给Target是NSControl类的职责，大部分UI控件都是继承与NSControl，如NSButton，NSTextField等；而NSControl的继承关系是</p>
+
+<p><code>
+NSControl-&gt;NSView-&gt;NSResponder-&gt;NSObject
+</code>
+其中NSView负责绘制控件，NSResponder负责相应事件，NSObject提供最基础的init()等方法</p>
+
+<p>ps: 在使用AppKit.framework中，一般不需要继承，直接使用就行</p>
+
+<h3 id="nsbutton-nsslider-nstextfieldaction">NSButton, NSSlider, NSTextField控件的常用action</h3>
+
+<blockquote>
+  <p>Some Commonly Used Subclasses of NSControl</p>
+</blockquote>
+
+<p>同时列举了一下所有UI控件。</p>
+
+<h3 id="connection">直接用连线完成connection</h3>
+
+<blockquote>
+  <p>Lay Out the XIB File</p>
+</blockquote>
+
+<p>打开Assistance Editor，用ctrl-drag从IB的控件往.h文件拉可以直接生成IBOutlet和IBAction代码</p>
+
+<p>ps: 此处添加代码发现没有<code>-init</code>函数，就直接添加到<code>applicationDidFinishLaunching:</code>，效果是一样的</p>
+
+<h3 id="property">property变量会自动生成<code>_名字</code>的私有变量</h3>
+
+<blockquote>
+  <p>Lay Out the XIB File</p>
+</blockquote>
+
+<p>同时会生成相应的getter和setter。</p>
+
+<h3 id="windwo">设定Windwo打开时第一个相应控件</h3>
+
+<blockquote>
+  <p>Lay Out the XIB File &gt; NSWindow’s initialFirstResponder Outlet</p>
+</blockquote>
+
+<p>ctrl-click点击(相当于右击)IB里dock的Window对象，把弹出列表中的initialFirstResponder链接到想要第一个相应的控件即可。</p>
+
+<h3 id="action">用代码创建action</h3>
+
+<blockquote>
+  <p>For the More Curious: Setting the Target Programmatically</p>
+</blockquote>
+
+<p>目前提及到设置控件的Action都是通过连线实现的，也可以通过以代码实现，这一节介绍了编译前的做法，和runtime的做法，几点笔记：</p>
+
+<ol>
+  <li><code>SEL</code>代表函数，可以理解成函数指针</li>
+  <li><code>@selector(function_name)</code>与<code>NSSelectorFromString(@"function_name")</code>的区别: 前者其实是一个宏，在编译时会自动替换成相应的函数，后者是在runtime时候寻找函数的</li>
+</ol>
+
+<h3 id="xcodedignostics">xcode调试程序的帮手Dignostics</h3>
+
+<blockquote>
+  <p>Debugging Hints</p>
+</blockquote>
+
+<p>这一节让我最深刻的是调试程序crash的方法，可以通过Product-Scheme-Edit Scheme，在左侧选择”Run”，在上面标签选择”Dignostics”，里面有一些调试选择可以帮助定位bug</p>
+
+<h3 id="document-based-app">document-based app可以多开</h3>
+
+<blockquote>
+  <p>Challenge</p>
+</blockquote>
+
+<p>非document-based app只能打开一个，在xcode创建项目时可以选定这个选项</p>
+
+<h2 id="ch06-helper-objects">ch06 Helper Objects</h2>
+
+<h3 id="delegates">Delegates就是一个接口？</h3>
+
+<blockquote>
+  <p>Delegates</p>
+</blockquote>
+
+<p>这里的delegate，其实就是帮某一个对象去完成一些事情，要成为delegates，主要有3步</p>
+
+<ol>
+  <li>在.h文件什么实现某个delegate</li>
+  <li>在.m文件实现delegate里的方法</li>
+  <li>把自身self传入那个对象的setDelegate()函数中</li>
+</ol>
+
+<p>感觉就像时配置以下处理函数的感觉，这个不能通过函数指针直接配置进那个对象吗?</p>
+
+<h3 id="nstableview">NSTableView例子书上缺少的步骤与收获</h3>
+
+<p>缺少的步骤：
+1. 在选中TableView设置为1列时，TableView的title还是两列，需要手动把title中间的分割线拉到右侧
+2. 在.m文件实现Delegate函数时，需要先在.m文件声明自己是TableView的DataSource和Delegate，添加<code>&lt;NSTableViewDataSource, NSTableViewDelegate&gt;</code> (可以不做)</p>
+
+<p>收获：
+1. 设置delegate和dataSource时，也可以直接在IB通过连线实现，通过该方式连接Delegate就不用在delegate的.h文件声明遵守这个delegate的protocol（即上面第二步可以不做）
+2. 几个函数的执行顺序：init() - awakeFromNib() - applicationDidFinishLaunching()；如何把初始化Tableview的数据源<code>_voice</code>放到了applicationDidFinishLaunching()里做，需要再加一句<code>[_tableView reloadData]</code>才能把数据再列表中展现出来，而若放在前二者里就不需要。</p>
+
+<h3 id="delegatenstableviewoutlet">Delegate就是NSTableView的outlet</h3>
+
+<blockquote>
+  <p>Edit SpeakLineAppDelegate.m &gt; Common Errors in Implementing a Delegate</p>
+</blockquote>
+
+<p>即IBOutlet NSTextField和Controller之间也是一种Delegate关系，NSTextField遵守某种Delegate，Controller可以通过调用Delegate里的方法，这些方法可以用来输出或输入。</p>
+
+<h2 id="nsarraycontroller">08 NSArrayController</h2>
+
+<h3 id="nsdocument">NSDocument主要负责文件读写</h3>
+
+<blockquote>
+  <p>Starting the RaiseMan Application</p>
+</blockquote>
+
+<p>Document-based程序工程会自动创建NSDocument子类</p>
+
+<h3 id="cocoahfoundationh">引入Cocoa.h与Foundation.h的区别</h3>
+
+<blockquote>
+  <p>Starting the RaiseMan Application</p>
+</blockquote>
+
+<p><code>#import &lt;Cocoa/Cocoa.h&gt;</code>和<code>#import&lt;Foundation/Foundation.h&gt;</code>是有区别的，前者是包含MacOS所有库，包括GUI和oc；而后者只是oc的库。</p>
+
+<p>所以一些Model类，无需知道UI细节的，应该只包含Foundation.h，这样就能方便移植到命令行项目或ios项目</p>
+
+<h3 id="nsarraycontrollercontent-array">绑定NSArrayController的Content Array</h3>
+
+<blockquote>
+  <p>Starting the RaiseMan Application - RMDocument.xib</p>
+</blockquote>
+
+<p>在RaiseMan Demo中，通过下面binging动作，NSArrayController的增删查改就能直接操作到Document.h定义的employees数组中:</p>
+
+<p>在xib文件中，添加NSArrayController对象后都dock后，</p>
+
+<ol>
+  <li>在右侧窗口选择”Attributes Inspector”，在下面Object Controller填入每一项的类名：Person，并填入Person的两个成员变量到keys中，这里主要得益于oc可以通过Key-Value Coding来直接设置成员变量(ps: 需要把成员变量设成property)</li>
+  <li>在右侧窗口选择”Bindings Inspector”，设置Content Arry为File’s Owner的employees(ps: employees是定义在Document.h的一个NSMutableArray对象)</li>
+  <li>把add和remove按钮直接分别connect到Dock中NSArrayController对象中已经实现的add:和remove:方法</li>
+</ol>
+
+<p>根据以上步骤，NSArrayController只存在于xib文件中，无需在代码中定义。</p>
+
+<h3 id="bindingsnstableview-cell">通过Bindings为NSTableView Cell绑定显示内容</h3>
+
+<blockquote>
+  <p>Starting the RaiseMan Application - RMDocument.xib</p>
+</blockquote>
+
+<p>在RaiseMan Demo中，通过Binding可以在xib中借助NSArrayController指定NSTableView Cell的显示内容:</p>
+
+<ol>
+  <li>
+    <p>选择第一列TableView Column，在Bind to选择Array Controller，并勾选；在Controller Key填入arrangedObjects，在Model Key Path填入personName(ps: 要显示的Person成员变量名)</p>
+  </li>
+  <li>
+    <p>同理，第二列Column也是在Binding设置与第一步同样的内容，只是Model Key Path填入另一个成员变量名expectedRaise皆可</p>
+  </li>
+</ol>
+
+<p>这样TableView就会通过NSArrayController获取内容并显示出来。</p>
+
+<h3 id="tableview-cellnumber-formatter">为TableView Cell添加Number Formatter</h3>
+
+<blockquote>
+  <p>Starting the RaiseMan Application - RMDocument.xib</p>
+</blockquote>
+
+<p>添加了Number Formatter后，在用户输入时会检查格式。</p>
+
+<p>Number Formatter是在Xcode 6.2是一个’#’的标识，注意与Text Fieldwith Number Formatter的区分，后者是一个Text Field。</p>
+
+<h3 id="setnilvalueforkey">重载setNilValueForKey:来处理输入空内容异常</h3>
+
+<blockquote>
+  <p>Starting the RaiseMan Application - Key-Value Coding and nil</p>
+</blockquote>
+
+<p>RaiseMan Demo中，当输入Raise为空时，因无法转换成float，会抛出以下异常并crash：</p>
+
+<p><code>
+RaiseMan[1983:303] Exception detected while handling key input.
+RaiseMan[1983:303] [&lt;Person 0x60000003b260&gt; setNilValueForKey]: could not set nil as the value for the key expectedRaise.
+</code>
+从异常信息中也可以看到是setNilValueForKey:抛出的异常，setNilValueForKey:是NSObject定义的函数，通过定义Person类中该方法可以处理该异常，具体重载内容请见书中代码。</p>
+
+<h2 id="concurrency">34 Concurrency</h2>
+
+<h3 id="nstableviewdatasource">NSTableView的DataSource</h3>
+
+<blockquote>
+  <p>Multithreading &gt; Simple Cocoa Background Threads</p>
+</blockquote>
+
+<p>在TableView的DataSouce里，填充的数组不能是</p>
+
+<p><code>
+@property (weak) NSArray *results;
+</code>
+而需要定义成私有变量，这样才能让TableView加载成功。</p>
+
+<p>还有，发现DataSouce的<code>tableView:objectValueForTableColumn:row</code>会被调用很多次，这是为何呢？</p>
+
+<h3 id="bgthread-demo">BgThread Demo的补充</h3>
+
+<blockquote>
+  <p>Multithreading &gt; Simple Cocoa Background Threads</p>
+</blockquote>
+
+<p>对于Backgrond Thread，书里没有给出完整的Demo，我根据书忠的代码，写了一个完整的Demo，其中数据源的result需要定义成私有变量，如上一条笔记所说。</p>
+
+<h2 id="nstask">36 NSTask</h2>
+
+<h3 id="base">开发文档base应用</h3>
+
+<blockquote>
+  <p>ZIPspector</p>
+</blockquote>
+
+<p>创建Document-Based Application需要制定后缀，首先在project创建页面需要输入后缀，然后在Targget-Info-Document Types中需要选定角色”Viewer/Editor”和填入UTI到identifier处。</p>
+
+<p>测试时run了之后，需要”在menu打开文档”，或者”在文档右击－使用该App打开”才能调试。</p>
+
+<h3 id="tableviewcell">设置TableViewCell为不可编辑</h3>
+
+<blockquote>
+  <p>ZIPspector</p>
+</blockquote>
+
+<p>在IB设置UI控件属性需要先选中，在右边的Attribute Inspector的第一行可以看到当前所选择的控件。</p>
+
+<p>先选中TableViewCell，在Inspector第一行显示为”Table Column”，在最下面有一栏state就可以看到。</p>
+
+<p>要改变Cloumn的大小，选中Cloumn后，多点击几次，知道出现边界有一个小方格，就可以通过拖动小方格来调整大小。</p>
+
+<h3 id="nstableviewdatasource-1">NSTableView显示数据只需要DataSource</h3>
+
+<blockquote>
+  <p>ZIPspector</p>
+</blockquote>
+
+<p>原来NSTableView显示数据只需要把其它类指定为DataSource，而不需要指定Delegate，只有当需要对用户选中Item时响应才需要指定后者。</p>
+
+<h3 id="nstableview-1">NSTableView条目数正常内容不正常</h3>
+
+<blockquote>
+  <p>ZIPspector</p>
+</blockquote>
+
+<p>当dataSource对象里使用<code>tableView:objectValueForTableColumn:row:</code>提供内容时，一定要记得把TableView设定成Cell Base，而不是View Base，不然内容会无法填充。</p>
+
+<h3 id="togglebutton">Toggle类型Button</h3>
+
+<blockquote>
+  <p>ZIPspector - iPing</p>
+</blockquote>
+
+<p>原来这种点击一下就变成另外一些内容的按钮时Toggle Button，如看视频的开始暂停按钮，在Inspector把type改为Toggle，填入alternate内容，把State改成Off即可。</p>
+
+<h3 id="nib">基于NIB开发的框架图例说明</h3>
+
+<blockquote>
+  <p>ZIPspector - iPing - Figure 36.8 Object Diagram</p>
+</blockquote>
+
+<p>这里提供了一种思路用来画MacOS基于NIB或者Storyboard开发的程序的框架画法，因为很多connection在IB里完成，代码里根本看不到，所以这种图例用来阐述程序的逻辑非常有用。</p>
+
+<h3 id="nspipensfilehandle">NSPipe和NSFileHandle</h3>
+
+<blockquote>
+  <p>ZIPspector - iPing</p>
+</blockquote>
+
+<p>NSPipe是用来接收NSTask的stdout:</p>
+
+<p><code>
+NSPipe *pipe = [[NSPipe alloc] init];
+[task setStandardOutput:pipe];
+</code>
+NSFileHandle是NSPipe对象返回的一个对象:</p>
+
+<p><code>
+NSFileHandle *fh = [pipe fileHandleForReading];
+</code>
+可以用来读取NSPipe里面的数据，有两种读法：</p>
+
+<ol>
+  <li>
+    <p>一种是一次性全部读完，如在ZIPspector例子中</p>
+
+    <p><code>
+[task waitUntilExit];
+NSData *data = [[pipe fileHandleForReading] readDataToEndOfFile];
+</code>
+这种方法需要等task执行完成后才能确保data被全部读出来。</p>
+  </li>
+  <li>
+    <p>另一种是task每往pipe写一次就读一次，需要借助NSNotification</p>
+
+    <p>```
+NSFileHandle *fh = [pipe fileHandleForReading];
+NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+[nc removeObserver:self];
+[nc addObserver:self selector:@selector(dataReady:)
+           name:NSFileHandleReadCompletionNotification object:fh];</p>
+
+    <p>[task launch];
+[fh readInBackgroundAndNotify];
+```
+其中<code>[fh readInBackgroundAndNotify]</code>是去读fileHandle，读完后产生<code>NSFileHandleReadCompletionNotification</code>，这个函数是一次性的，因此在绑定notification的<code>dataReay:</code>方法需要再次调用fh的readInBackgroundAndNotify。</p>
+  </li>
+</ol>
+
+<h3 id="tasknstaskdidterminatenotification">Task的NSTaskDidTerminateNotification</h3>
+
+<blockquote>
+  <p>ZIPspector - iPing</p>
+</blockquote>
+
+<p>iPing例子中用到了两个Notification，第一个是NSFileHandleReadCompletionNotification，当fileHandle的readInBackgroundAndNotify方法读完后发布。</p>
+
+<p>另外一个是Task的NSTaskDidTerminateNotification，当task完成后会发布，利用这个可以在task完成后获取task的执行状态或者做另外一些动作。</p>
+
+<h3 id="task">Task的返回状态</h3>
+
+<blockquote>
+  <p>ZIPspector</p>
+</blockquote>
+
+<p><code>
+int status = [task terminationStatus];
+if (status != 0) {
+    ...
+}
+</code></p>
+
+<p>通过上述方法可以获取task的返回状态，ZIPspector例子还进一步使用了返回Error的方法</p>
+
+<h3 id="nstextstorage">用NSTextStorage拼接字符串</h3>
+
+<blockquote>
+  <p>ZIPspector - iPing</p>
+</blockquote>
+
+<p>在iPing例子中，直接使用NSTextView的NSTextStorage对象，把从pipe通过NSFileHandle读到的数据直接添加到结尾：</p>
+
+<p><code>
+NSString *s = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+NSTextStorage *ts = [outputView textStorage];
+[ts replaceCharactersInRange:NSMakeRange([ts length], 0) withString:s];
+</code>
+第一行是从NSData转换成NSString，第三行使用替代函数替代NSRange范围的字符，这里的NSRange是指向数据末尾的，且长度为0，即直接把字符添加到原内容的结尾。</p>
+
+<blockquote>
+  <p>Jacob Pan <a href="http://jacobpan3g.github.io/cn">( jacobpan3g.github.io/cn )</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/01/20/vim-note/">vim笔记</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/01/29/animation-in-safari/">在safari下适用css的animation</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+
+
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: ''?'':'issue-label',
+        owner: 'JacobPan3g',
+        repo: 'jacobpan3g.github.io',
+        oauth: {
+            client_id: '8a1e6ff22f37f6808c22',
+            client_secret: '377eee8fe03e02a91d8ff2a63d6420ba705470bb',
+        },
+    });
+    gitment.render('gitmentContainer')
+</script>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             时光沉淀于此！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/JacobPan3g" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jacob.pan@foxmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <!--
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        -->
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <!--
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+            -->
+            <span>
+                Blogs written by <a href="https://jacobpan3g.github.io/cn">Jacob Pan</a>.
+            </span>
+        </p>
+    </div>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?75177901590fba02b71851d2acaee595";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</footer>
+<!--
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+-->
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/smooth-scroll.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>shell基本</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="/2017/12/09/shell-basic/">
+    <link rel="alternate" type="application/rss+xml" title="Ja.Code" href="/feed.xml ">
+
+
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Ja.Code</a>
+        <small>猿修地，时光机</small>
+        <div>致力于成为一位活用前端技术的嵌入式全栈工程师</div>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>shell基本</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-12-09
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>Jacob Pan
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#linux" title="Category: linux" rel="category">linux</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#shell" title="Tag: shell" rel="tag">shell</a-->
+        <a href="/tag/#shell" title="Tag: shell" rel="tag">shell</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#section">判断 []</a></li>
+  <li><a href="#section-1">循环</a>    <ul>
+      <li><a href="#for">for</a></li>
+      <li><a href="#while">while</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-2">函数定义</a></li>
+  <li><a href="#section-3">参数</a></li>
+  <li><a href="#argsh-aaa-bbb-ccc">arg.sh aaa bbb ccc</a>    <ul>
+      <li><a href="#getopts">getopts</a></li>
+      <li><a href="#sleep">sleep</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="section">判断 []</h2>
+
+<p>注意<code>[]</code>内一定要两边留有空格，不然会报错，如</p>
+
+<p><code>shell
+[! -f test.sh]      # error
+[ ! -f test.sh ]
+</code></p>
+
+<p>一些常用的option如下：</p>
+
+<p>文件</p>
+
+<ul>
+  <li>-f 判断文件是否存在(不包括目录)</li>
+  <li>-L 判断文件是否为链接文件</li>
+  <li>-d 判断是否为目录</li>
+  <li>-r 判断是否可读</li>
+  <li>-w 判断是否可写</li>
+  <li>-x 判断是否可执行</li>
+</ul>
+
+<p>逻辑</p>
+
+<ul>
+  <li>-a 与</li>
+  <li>-o 或</li>
+  <li>! 非</li>
+</ul>
+
+<p>更多条件判断，可见<a href="http://www.jb51.net/article/56553.htm">Shell脚本IF条件判断和判断条件总结</a></p>
+
+<h2 id="section-1">循环</h2>
+
+<h3 id="for">for</h3>
+
+<p><code>shell
+arr = "1 2 3"
+for item in $arr
+do
+    echo $item
+done
+</code></p>
+
+<h3 id="while">while</h3>
+
+<p><code>shell
+while cmd
+do
+    ...
+done
+</code>
+当cmd成功执行，<code>$?</code>为0时，进入循环体。</p>
+
+<p>无限循环可以这样写</p>
+
+<p><code>shell
+while true; do
+    ...
+done
+</code></p>
+
+<h2 id="section-2">函数定义</h2>
+
+<p>```shell
+func()
+{
+    echo $1
+}</p>
+
+<p>func “hello world”
+```</p>
+
+<h2 id="section-3">参数</h2>
+
+<p>shell脚本参数可以通过<code>$0, $1, $2, ...</code>读取，其中<code>$0</code>是脚本自己的名字，还有一些特殊参数</p>
+
+<ul>
+  <li><code>$#</code> 参数的个数</li>
+  <li><code>$@</code> 参数的内容</li>
+  <li><code>$*</code> 参数的内容，但若是包在括号里<code>"$*"</code>传入另一个函数，会被当做1整个字符串；而<code>"$@"</code>会被当做多个参数(与没引号的<code>$@</code>,<code>$*</code>一致)</li>
+</ul>
+
+<p>可以通过下面arg.sh脚本验证：</p>
+
+<p>```shell
+arg()
+{
+    echo $#
+}</p>
+
+<h1 id="argsh-aaa-bbb-ccc">arg.sh aaa bbb ccc</h1>
+<p>arg $@      # 3
+arg $*      # 3
+arg “$@”    # 3
+arg “$*”    # 1
+```</p>
+
+<h2 id="getopts">getopts</h2>
+
+<p>getopts用来处理参数中的option的，使用实例如下：</p>
+
+<p><code>shell
+while getopts "ac:h" opt
+do
+    case $opt in
+        h) echo "hlep";;
+        a) echo "all";;
+        c) echo "create $OPTARG";;
+        ?) echo "invalid option";;
+    esac
+    shift
+done
+#shift $(($OPTIND - 1)) 
+</code></p>
+
+<p>上述例子主要是识别参数中的<code>-a -c -h</code>选项，其中，<code>-c</code>后面需跟参数，在代码中该参数保存在$OPTARG。注意，每次swich完记得要<code>shift</code>，也可以在循环外面shift，如最后一行注释部分。</p>
+
+<p>(ps: shell的case不需要加break，末尾的<code>;;</code>就有break的作用；另外，<code>;&amp;</code>表示无条件继续，<code>;;&amp;</code>表示有条件继续，这两个特性在<code>$BASH_VERSION=4.1.x</code>以上的版本才支持)</p>
+
+<h2 id="sleep">sleep</h2>
+
+<p><code>
+sleep 1     # 和下面1s一样
+sleep 1s
+sleep 1m    # 睡眠1分钟
+sleep 1h    # 睡眠1小时
+</code></p>
+
+<blockquote>
+  <p>Jacob Pan <a href="http://jacobpan3g.github.io/cn">( jacobpan3g.github.io/cn )</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/12/08/log-line-in-c-macro/">一行log宏：c语言debug跟踪小利器</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/12/09/xargs-stdin-parameter-reader/">xargs：从stdin读取参数的工具</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+
+
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: ''?'':'issue-label',
+        owner: 'JacobPan3g',
+        repo: 'jacobpan3g.github.io',
+        oauth: {
+            client_id: '8a1e6ff22f37f6808c22',
+            client_secret: '377eee8fe03e02a91d8ff2a63d6420ba705470bb',
+        },
+    });
+    gitment.render('gitmentContainer')
+</script>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             时光沉淀于此！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/JacobPan3g" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jacob.pan@foxmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <!--
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        -->
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <!--
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+            -->
+            <span>
+                Blogs written by <a href="https://jacobpan3g.github.io/cn">Jacob Pan</a>.
+            </span>
+        </p>
+    </div>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?75177901590fba02b71851d2acaee595";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</footer>
+<!--
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+-->
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/smooth-scroll.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+  </body>
+
+</html>

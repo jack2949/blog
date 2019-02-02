@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Mac开发：使用WebView打开html文件</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="/2018/01/29/open-html-file-in-mac-app/">
+    <link rel="alternate" type="application/rss+xml" title="Ja.Code" href="/feed.xml ">
+
+
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Ja.Code</a>
+        <small>猿修地，时光机</small>
+        <div>致力于成为一位活用前端技术的嵌入式全栈工程师</div>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Mac开发：使用WebView打开html文件</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-01-29
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>Jacob Pan
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#mac" title="Category: mac" rel="category">mac</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#macOS" title="Tag: macOS" rel="tag">macOS</a-->
+        <a href="/tag/#macOS" title="Tag: macOS" rel="tag">macOS</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#section">往项目加入前端文件</a></li>
+  <li><a href="#webviewhtml">使用WebView展示html文件</a></li>
+  <li><a href="#webkit">添加Webkit库</a></li>
+</ul>
+
+<p>通过WebView，Mac App可以利用PC本地的Safari浏览器内核来加载html文件，里的js也可以和oc代码交互，通过这种方式可以直接适用前端技术来开发Mac App界面。</p>
+
+<h2 id="section">往项目加入前端文件</h2>
+
+<p>把前端文件以一整个文件夹拖进xcode项目，在弹出的对话框选择”Create folder references”，在”Add to targets”处勾选target，点击”Add”按钮，添加后，xcode左边的工程目录如下图，其中ui目录就是前端文件目录:</p>
+
+<p><code>
+HelloWebView
+├── HelloWebView
+│   ├── HelloWebViewController.h
+│   ├── HelloWebViewController.m
+│   ├── AppDelegate.h
+│   ├── AppDelegate.m
+│   ├── Image.xcassets
+│   ├── MainMenuxib
+│   ├── ui
+│   │   ├── css
+│   │   ├── js
+│   │   └── demo
+│   │       └── index.html
+│   └── Supporting Files
+└── Products
+</code></p>
+
+<p>通过这种方式添加进来的前端文件可以保持完整的层次结构，调用目录关系不会变。若通过”Create groups”来添加文件夹，所有文件其实都在项目根目录下，这样就会出现文件找不到的错误。</p>
+
+<p>通过上述方式添加进来的前端文件，在最后打包App时会一起打包进去。</p>
+
+<h2 id="webviewhtml">使用WebView展示html文件</h2>
+
+<ol>
+  <li>在相应的NIB文件添加WebView，根据需要调整大小</li>
+  <li>
+    <p>在相应的Controller.h添加WebView成员，并与NIB中WebView对像相连，还要添加头文件</p>
+
+    <p><code>
+...
+#import &lt;WebKit/WebKit.h&gt;
+@interface XXX: XXX {
+    ...
+}
+@property (weak) IBOutlet WebView *webview;
+</code></p>
+  </li>
+  <li>
+    <p>在相应的Contriller.m中的<code>awakeFromNib()</code>添加以下逻辑(ps: 没有该函数可以自行定义):</p>
+
+    <p>```
+- (void)awakeFromNib
+{
+    NSString* path = [[NSBundle mainBundle] pathForResource:@”index” ofType:@”html” inDirectory:@”ui/demo”];
+    NSURL* url = [NSURL fileURLWithPath:path];
+    NSURLRequest* request = [NSURLRequest requestWithURL:url] ;
+    [[self.webview  mainFrame ] loadRequest:request];
+}</p>
+
+    <p>``` 
+注意：
+- 上述第3行是指定前端入口恩见index.html的路径，本例子该文件是放在<code>ui/demo/index.html</code>
+- 项目的根目录指的是与xxx.xcodeproj平行的以target为名字的目录，而不是xxx.xcodeproj所在的目录</p>
+  </li>
+</ol>
+
+<h2 id="webkit">添加Webkit库</h2>
+
+<p>在项目Target的”Build Phases” - “Link Binary With Libraries”中添加WebKit.framwork</p>
+
+<p>然后编译运动，就能看到用前端代码事件的UI了，注意，若发现页面展示与预期效果不太一致，可以先在本机的safari上把html页面调通，再放在WebView上运行，因为WebView适用的就是safari的浏览器内核来加载html页面的。</p>
+
+<blockquote>
+  <p>Jacob Pan <a href="http://jacobpan3g.github.io/cn">( jacobpan3g.github.io/cn )</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/01/29/animation-in-safari/">在safari下适用css的animation</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/01/31/uilite-container-class-reference/">UILite.Container Class Reference</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+
+
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: ''?'':'issue-label',
+        owner: 'JacobPan3g',
+        repo: 'jacobpan3g.github.io',
+        oauth: {
+            client_id: '8a1e6ff22f37f6808c22',
+            client_secret: '377eee8fe03e02a91d8ff2a63d6420ba705470bb',
+        },
+    });
+    gitment.render('gitmentContainer')
+</script>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             时光沉淀于此！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/JacobPan3g" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jacob.pan@foxmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <!--
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        -->
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <!--
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+            -->
+            <span>
+                Blogs written by <a href="https://jacobpan3g.github.io/cn">Jacob Pan</a>.
+            </span>
+        </p>
+    </div>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?75177901590fba02b71851d2acaee595";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</footer>
+<!--
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+-->
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/smooth-scroll.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+  </body>
+
+</html>

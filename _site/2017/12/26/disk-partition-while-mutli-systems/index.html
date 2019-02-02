@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>安装多系统分区技巧</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="/2017/12/26/disk-partition-while-mutli-systems/">
+    <link rel="alternate" type="application/rss+xml" title="Ja.Code" href="/feed.xml ">
+
+
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Ja.Code</a>
+        <small>猿修地，时光机</small>
+        <div>致力于成为一位活用前端技术的嵌入式全栈工程师</div>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>安装多系统分区技巧</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-12-26
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>Jacob Pan
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#linux" title="Category: linux" rel="category">linux</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#install" title="Tag: install" rel="tag">install</a-->
+        <a href="/tag/#install" title="Tag: install" rel="tag">install</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#section">磁盘分区方案</a>    <ul>
+      <li><a href="#win">win系统分区</a></li>
+      <li><a href="#win-1">win文件分区</a></li>
+      <li><a href="#ext4">ext4代码分区</a></li>
+      <li><a href="#ext4-1">ext4文本分区</a></li>
+      <li><a href="#linux">linux系统分区</a></li>
+      <li><a href="#reserved">reserved分区</a></li>
+      <li><a href="#boot">boot分区</a></li>
+      <li><a href="#swap">swap分区</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>根据笔者多年折腾双系统的经验，发现在linux系统工作时，有时候会因为系统太久而缺少某些库，通过<code>apt-get</code>或<code>yum</code>都无法安装，或者一些其他问题导致项目代码在自己的系统就是编译不过，此时，或许需要考虑更换linux系统。</p>
+
+<p>基于上述考虑，我们的系统使用了一段时间后需要重新安装新版本的系统，因此，我的分区原则是一个词<code>降偶</code>——降低代码与系统之间的耦合性，降低系统与磁盘分区的耦合性，同时还要保持一个到两个reserved分区</p>
+
+<h2 id="section">磁盘分区方案</h2>
+
+<p>我一般不会采取安装引导里的推荐分区方案，一般都是选取<code>其他</code>，一些是我们具体分区方案：</p>
+
+<h3 id="win">win系统分区</h3>
+
+<p>我的电脑一般会保留windows系统，方便切换使用；还有，当我需要跟换linux系统时，我可以通过熟悉的方法，windows下硬盘安装linux</p>
+
+<h3 id="win-1">win文件分区</h3>
+
+<p>有了windows系统，windows的ntfs文件分区也是需要的，这里可以根据需要分配，100G~200G足够了</p>
+
+<h3 id="ext4">ext4代码分区</h3>
+
+<p>这个分区专门放代码的，日后若还了linux系统，我这个分区里的代码还是可以使用的，只需通过简单的硬盘挂载，最多需要通过<code>chown -R</code>来更改一下所有者。这个分区我一般建议是100~200G，具体可根据自己需要和硬盘总大小决定</p>
+
+<h3 id="ext4-1">ext4文本分区</h3>
+
+<p>主要在linux存在工程代码意外的东西，笔记，文档，自己的小项目代码等等，这个分区根据自己喜好分配大小，我一般分配20~40G</p>
+
+<h3 id="linux">linux系统分区</h3>
+
+<p>这个分区用来安装linux系统，我一般分配20G，安装系统直接挂载<code>\</code>根目录即可</p>
+
+<h3 id="reserved">reserved分区</h3>
+
+<p>这个分区是冗余分区，大小20G，我一般会选择留2个reserved分区，主要作用是用于当我需要安装新linux系统时，但旧系统的资料又还没空整理，不能立马覆盖原系统分区，这时这些reserved分区就起作用了，直接把系统安装在reserved分区中，这样PC就同时存在3个系统，不用担心boot，新安装linux系统时boot会自动把所有系统都找到</p>
+
+<h3 id="boot">boot分区</h3>
+
+<p>该分区主要用来存放boot引导程序，分配256M~512M，一般都够用。之前有过boot分区满了的经历，当时是因为每次系统提示软件升级都同意了，不知为何，boot分区渐渐就满了，这个也是有方法清除的。现在我一般不按照系统提示的软件升级了，感觉没必要</p>
+
+<h3 id="swap">swap分区</h3>
+
+<p>之前听过一个理论，swap分区需要时内存的两倍，所以这个分区需按照PC的内存而确定，4G内存就8G，我感觉4G~8G足够了。</p>
+
+<p>ps: boot分区和swap分区是可以多个linux共用的，安装linux时也不需要主动挂载，系统会自己探测到的，安装时只把挂载根目录就可以了。</p>
+
+<p>以上就是我的多系统分区的经验了，按照上面分区，做好了各方面解耦和存冗，只要再把一些工具的配置备份好，就完全不需惧怕频繁更换linux系统</p>
+
+<blockquote>
+  <p>Jacob Pan <a href="http://jacobpan3g.github.io/cn">( jacobpan3g.github.io/cn )</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2017/12/22/an-error-in-windows-8.1/">Windows8.1下"缺失api-ms-win-crt-heap-l1-1-0.dll"问题的解决方法</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2017/12/26/git-in-linux/">Linux下使用git</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+
+
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: ''?'':'issue-label',
+        owner: 'JacobPan3g',
+        repo: 'jacobpan3g.github.io',
+        oauth: {
+            client_id: '8a1e6ff22f37f6808c22',
+            client_secret: '377eee8fe03e02a91d8ff2a63d6420ba705470bb',
+        },
+    });
+    gitment.render('gitmentContainer')
+</script>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             时光沉淀于此！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/JacobPan3g" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jacob.pan@foxmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <!--
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        -->
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <!--
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+            -->
+            <span>
+                Blogs written by <a href="https://jacobpan3g.github.io/cn">Jacob Pan</a>.
+            </span>
+        </p>
+    </div>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?75177901590fba02b71851d2acaee595";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</footer>
+<!--
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+-->
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/smooth-scroll.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+  </body>
+
+</html>

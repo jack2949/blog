@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MacOS App代码提权</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="/2018/02/07/gain-root-permission-for-mac-app/">
+    <link rel="alternate" type="application/rss+xml" title="Ja.Code" href="/feed.xml ">
+
+
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Ja.Code</a>
+        <small>猿修地，时光机</small>
+        <div>致力于成为一位活用前端技术的嵌入式全栈工程师</div>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/page/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>MacOS App代码提权</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2018-02-07
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>Jacob Pan
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#mac" title="Category: mac" rel="category">mac</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#root" title="Tag: root" rel="tag">root</a-->
+        <a href="/tag/#root" title="Tag: root" rel="tag">root</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#authorizationexecutewithprivileges">1. AuthorizationExecuteWithPrivileges()</a></li>
+  <li><a href="#servicemanagementframeworklaunchddaemon">2. 使用ServiceManagement.framework注册LaunchdDaemon</a></li>
+  <li><a href="#applescript">3. 使用AppleScript</a></li>
+</ul>
+
+<p>在MacOS App开发中，有一些操作需要管理员权限，需要弹出认证对话框让用户输入账号和密码，这个过程就是MacOS App提权的过程，主要有下面几种方式：</p>
+
+<h2 id="authorizationexecutewithprivileges">1. AuthorizationExecuteWithPrivileges()</h2>
+
+<p>使用这个接口最有代表的库是<a href="https://github.com/sveinbjornt/STPrivilegedTask">STPrivilegedTask</a>，这是一个封装得很好得App提权库，接口与NSTask十分像，使用起来十分方便。</p>
+
+<p>可惜得是AuthorizationExecuteWithPrivileges()接口在MacOS 10.7开始deprecated，据说在10.12的版本该接口就关闭了。</p>
+
+<p>因此，若要兼容10.12以后的MacOS版本，就不得不放弃使用STPrivilegedTask库了。</p>
+
+<h2 id="servicemanagementframeworklaunchddaemon">2. 使用ServiceManagement.framework注册LaunchdDaemon</h2>
+
+<p>这是Apple官方目前推荐的提权方式，官方有一个SMJobBless的Demo，是用来有点复杂，具体请见另一篇文档”SMJobBless官方Demo笔记”</p>
+
+<p>该方法有一个几个小缺点：</p>
+
+<ul>
+  <li>弹出认证对话框的提示内容是”需要Install Helper”，而且每次打开都是这样的提示，对于小白用户来说，会不会误导用户App老是在安装什么东西？</li>
+  <li>LaunchdDaemon及其配置文件是需要安装到<code>/Library</code>下的，当用户把App卸载后会不会存在”残留问题”？</li>
+</ul>
+
+<h2 id="applescript">3. 使用AppleScript</h2>
+
+<p><code>
+do shell script "..." with administrator privileges
+</code>
+省略号部分填入shell脚本，任何可执行文件都需要写全路径，如<code>/bin/ls</code>。</p>
+
+<p>以上是AppleScript脚本，通过这种方式提权有以下有点：</p>
+
+<ul>
+  <li>比上述”注册LaunchdDaemon”方法实现起来简单很多</li>
+  <li>同时也不用担心卸载残留的问题，因为全部东西都在.app里</li>
+</ul>
+
+<p>AppleScript脚本在objective-c中有两种执行方式：</p>
+
+<ul>
+  <li>通过NSTask执行”/usr/bin/osascript -e "do shell …"”</li>
+  <li>通过NSAppleScript执行</li>
+</ul>
+
+<p>方法1有两个缺点：</p>
+
+<ul>
+  <li>
+    <p><code>do shell script</code>会在所有shell执行完成后再把所有stdout返回，因此当启动的是Daemon进程，就算使用NSTask的fileHandle Notification，也无法把stdout分次读取出来。</p>
+  </li>
+  <li>
+    <p>这种方法的认证窗口提示信息是”osascript wants to make changes.”，对于小白用户来说会不会有一种这样的感觉”我明明安装的是XXX.app，怎么来了一个osascript让我输入账号密码？会不会是恶意程序？”</p>
+  </li>
+</ul>
+
+<p>而使用NSAppleScript方法时，认证窗口的提示信息是”APP_NAME wants to make changes.”，感觉这样的提示更加友好。但也有一些缺点:</p>
+
+<ul>
+  <li>
+    <p>NSAppleScript执行Daemon进程的话会直到Daemon退出才退出，即会一直占用线程</p>
+
+    <p>解法：建议在子线程使用NSAppleScript，以免UI无法响应</p>
+  </li>
+  <li>
+    <p>也存在stdout只能等待Daemon退出才全部打印的问题</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>Jacob Pan <a href="http://jacobpan3g.github.io/cn">( jacobpan3g.github.io/cn )</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+        
+            
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2018/02/06/mac-note/">Mac使用笔记</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2018/02/07/smjobbless-demo-note/">SMJobBless官方Demo笔记</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+
+
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: '2018-02-07-gain-root-permission-for-mac-app'?'2018-02-07-gain-root-permission-for-mac-app':'issue-label',
+        owner: 'JacobPan3g',
+        repo: 'jacobpan3g.github.io',
+        oauth: {
+            client_id: '8a1e6ff22f37f6808c22',
+            client_secret: '377eee8fe03e02a91d8ff2a63d6420ba705470bb',
+        },
+    });
+    gitment.render('gitmentContainer')
+</script>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             时光沉淀于此！ 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/JacobPan3g" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jacob.pan@foxmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>        
+        </p>
+        <!--
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        -->
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <!--
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+            -->
+            <span>
+                Blogs written by <a href="https://jacobpan3g.github.io/cn">Jacob Pan</a>.
+            </span>
+        </p>
+    </div>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?75177901590fba02b71851d2acaee595";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</footer>
+<!--
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+-->
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/smooth-scroll.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+  </body>
+
+</html>
